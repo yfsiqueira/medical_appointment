@@ -15,7 +15,7 @@ export class User {
     id: string
     isAdmin: boolean
 
-    constructor(props: IUser){
+    private constructor(props: IUser){
         this.name = props.name;
         this.username = props.username;
         this.password = props.password;
