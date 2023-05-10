@@ -1,8 +1,8 @@
-import { hash } from "bcrypt";
 import { CustomError } from "../../../../errors/custom.error"
-import { PasswordBcrypt } from "../../../../infra/shared/crypto/password.bcrypt";
 import { IPasswordCrypto } from "../../../../infra/shared/crypto/password.crypto";
 import { IUserRepository } from "../../repositories/user.repository";
+import { IToken } from "../../../../infra/shared/token/token";
+import { User } from "../../entitites/user.entity";
 
 type AuthenticateRequest = {
     username: string
@@ -10,7 +10,11 @@ type AuthenticateRequest = {
 }
 
 export class AuthenticateUserUseCase {
-    constructor(private userRepository: IUserRepository, private passwordCrypto: IPasswordCrypto) { }
+    constructor(
+        private userRepository: IUserRepository,
+        private passwordCrypto: IPasswordCrypto,
+        private token: IToken
+    ) { }
 
     async execute({ username, password }: AuthenticateRequest) {
         if (!username || !password) {
@@ -28,6 +32,8 @@ export class AuthenticateUserUseCase {
         if (!comparePasswordEquals) {
             throw new CustomError("Username/Password incorrect", 401);
         }
-        return user;
+
+        const tokenGenerated = this.token.create(user);
+        return tokenGenerated;
     }
 }
