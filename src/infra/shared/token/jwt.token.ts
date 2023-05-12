@@ -19,7 +19,7 @@ export class JWTToken implements IToken {
             this.TOKEN_SECRET_CRYPTO,
             {
                 subject: id,
-                expiresIn: '1m'
+                expiresIn: '15m'
             }
         );
 

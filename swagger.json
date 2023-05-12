@@ -6,12 +6,17 @@
         "version": "1.0.0"
     },
     "paths": {
-        "tags": [
-            "Speciality"
-        ],
         "/specialities": {
             "post": {
                 "description": "Cadastro de especialidade",
+                "tags": [
+                    "Speciality"
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -28,6 +33,41 @@
                                 "schema": {
                                     "$ref": "#/components/schemas/SpecialityResponse"
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "description": "Autenticação do Usuário",
+                "tags": [
+                    "Users"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário autenticado com sucesso (Geração do Token)",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Falha na autentcação de usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
                             }
                         }
                     }
@@ -80,6 +120,30 @@
                         "format": "date-time"
                     }
                 }
+            },
+            "LoginRequest": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "description": "Username do usuário",
+                        "example": "username_test"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Senha do usuário",
+                        "example": "password_test"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "BearerAuth": {
+                "description": "Autenticação da API",
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "tokenUrl": "http://localhost:3000/login"
             }
         }
     }
